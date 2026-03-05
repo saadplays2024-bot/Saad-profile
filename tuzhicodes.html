@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TuZhi Gamerz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg1: #0d0d1a;
+      --bg2: #12122b;
+      --card: #18182e;
+      --card2: #1f1f3a;
+      --border: rgba(120,100,255,0.18);
+      --txt1: #f0eeff;
+      --txt2: #a09cc0;
+      --accent: #7c6ef7;
+      --accent2: #ff6b9d;
+      --glow: rgba(124,110,247,0.4);
+      --radius: 20px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg1);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 30px 16px 60px;
+      overflow-x: hidden;
+    }
+
+    /* ── BG PARTICLES ── */
+    #particles {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+    }
+    .star {
+      position: absolute;
+      width: 2px; height: 2px;
+      background: white;
+      border-radius: 50%;
+      opacity: 0;
+      animation: twinkle var(--dur, 3s) var(--delay, 0s) infinite;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0; transform: scale(1); }
+      50% { opacity: var(--bright, 0.6); transform: scale(1.5); }
+    }
+
+    /* ── CARD ── */
+    .profile-card {
+      position: relative; z-index: 1;
+      width: 100%; max-width: 420px;
+      background: var(--card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: 0 0 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);
+      animation: cardIn 0.7s cubic-bezier(0.16,1,0.3,1) both;
+    }
+    @keyframes cardIn {
+      from { opacity:0; transform: translateY(40px) scale(0.97); }
+      to   { opacity:1; transform: translateY(0) scale(1); }
+    }
+
+    /* ── BANNER ── */
+    .banner {
+      width: 100%; height: 150px;
+      background: linear-gradient(135deg,#ff6b9d,#8e44ad,#5865f2);
+      position: relative; overflow: hidden; flex-shrink: 0;
+    }
+    .banner img {
+      width: 100%; height: 100%; object-fit: cover;
+      display: block;
+      transition: transform 0.6s ease;
+    }
+    .banner:hover img { transform: scale(1.05); }
+    .banner-shimmer {
+      position: absolute; inset: 0;
+      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.06) 50%, transparent 60%);
+      animation: shimmer 3s infinite;
+    }
+    @keyframes shimmer {
+      0%   { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    /* ── AVATAR AREA ── */
+    .avatar-row {
+      position: relative; padding: 0 20px;
+      margin-top: -52px;
+      display: flex; align-items: flex-end; gap: 14px;
+    }
+
+    .avatar-wrap { position: relative; flex-shrink: 0; }
+
+    .avatar {
+      width: 100px; height: 100px;
+      border-radius: 50%;
+      border: 4px solid var(--card);
+      background: var(--card2);
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5), 0 0 0 2px var(--accent);
+      animation: avatarPop 0.8s 0.2s cubic-bezier(0.16,1,0.3,1) both;
+    }
+    @keyframes avatarPop {
+      from { opacity:0; transform: scale(0.6); }
+      to   { opacity:1; transform: scale(1); }
+    }
+    .avatar img { width:100%; height:100%; object-fit:cover; display:block; }
+
+    .status-dot {
+      position: absolute; bottom: 6px; right: 6px;
+      width: 22px; height: 22px;
+      background: var(--card);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      border: 3px solid var(--card);
+    }
+    .status-dot-inner {
+      width: 14px; height: 14px;
+      border-radius: 50%;
+    }
+    .status-dot-inner.dnd   { background: #ed4245; }
+    .status-dot-inner.idle  { background: #faa61a; }
+    .status-dot-inner.online{ background: #3ba55d; }
+    .status-dot-inner.offline{background: #747f8d;}
+
+    /* ── STATUS BUBBLE ── */
+    .status-bubble {
+      flex: 1;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px 14px;
+      margin-bottom: 10px;
+      font-size: 13px;
+      color: var(--txt2);
+      line-height: 1.4;
+      word-break: break-word;
+      animation: fadeSlide 0.7s 0.35s both;
+    }
+    @keyframes fadeSlide {
+      from { opacity:0; transform: translateX(16px); }
+      to   { opacity:1; transform: translateX(0); }
+    }
+
+    /* ── PROFILE BODY ── */
+    .profile-body {
+      padding: 18px 20px 24px;
+    }
+
+    .display-name {
+      font-size: 26px; font-weight: 900;
+      color: var(--txt1);
+      letter-spacing: -0.5px;
+      animation: fadeUp 0.5s 0.4s both;
+    }
+    .meta-row {
+      display: flex; align-items: center; gap: 8px;
+      flex-wrap: wrap;
+      margin: 4px 0 16px;
+      font-size: 14px;
+      color: var(--txt2);
+      animation: fadeUp 0.5s 0.5s both;
+    }
+    .meta-sep { opacity: 0.4; }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform: translateY(12px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+
+    /* ── BADGES ── */
+    .badges-wrap {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      margin-bottom: 20px;
+      animation: fadeUp 0.5s 0.55s both;
+    }
+    .badge-item {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: var(--card2);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex; align-items: center; justify-content: center;
+      padding: 4px;
+    }
+    .badge-item img {
+      width: 100%; height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    .badge-item:hover {
+      transform: translateY(-4px) scale(1.12);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4), 0 0 0 2px var(--accent);
+    }
+
+    /* ── BADGE TOOLTIP ── */
+    .badge-tooltip {
+      position: fixed; top: 18px; left: 50%;
+      transform: translateX(-50%) translateY(-80px);
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 20px;
+      display: flex; align-items: center; gap: 12px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+      z-index: 9999;
+      opacity: 0;
+      transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+      pointer-events: none;
+    }
+    .badge-tooltip.show {
+      opacity: 1; transform: translateX(-50%) translateY(0);
+    }
+    .badge-tooltip-img {
+      width: 36px; height: 36px;
+      object-fit: contain; flex-shrink: 0;
+    }
+    .badge-tooltip-name {
+      font-size: 15px; font-weight: 700;
+      color: var(--txt1);
+    }
+
+    /* ── BUTTONS ── */
+    .buttons-wrap {
+      display: flex; flex-direction: column; gap: 10px;
+      margin-bottom: 20px;
+      animation: fadeUp 0.5s 0.6s both;
+    }
+    .profile-btn {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      padding: 13px 20px;
+      border-radius: 50px;
+      font-size: 14px; font-weight: 800;
+      color: white;
+      text-decoration: none;
+      border: none; cursor: pointer;
+      letter-spacing: 0.3px;
+      transition: transform 0.25s, box-shadow 0.25s, filter 0.25s;
+      position: relative; overflow: hidden;
+    }
+    .profile-btn::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .profile-btn:hover {
+      transform: translateY(-3px);
+      filter: brightness(1.1);
+    }
+    .profile-btn:active { transform: translateY(0) scale(0.97); }
+    .profile-btn i { font-size: 16px; }
+
+    /* ── ABOUT ── */
+    .about-box {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      animation: fadeUp 0.5s 0.65s both;
+    }
+    .about-label {
+      font-size: 11px; font-weight: 800;
+      color: var(--txt2);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .about-text {
+      font-size: 14px; color: var(--txt1);
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    /* ── FOOTER ── */
+    .profile-footer {
+      border-top: 1px solid var(--border);
+      padding: 14px 20px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--txt2);
+      letter-spacing: 0.3px;
+      animation: fadeUp 0.5s 0.7s both;
+    }
+
+    /* ── SHIMMER SKELETON ── */
+    .skeleton {
+      background: linear-gradient(90deg, var(--card2) 25%, rgba(255,255,255,0.04) 50%, var(--card2) 75%);
+      background-size: 200% 100%;
+      animation: skel 1.2s infinite;
+      border-radius: 8px;
+    }
+    @keyframes skel {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* ── PULSE RING on avatar ── */
+    .avatar-wrap::before {
+      content: '';
+      position: absolute; inset: -6px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      opacity: 0;
+      animation: pulseRing 2.5s ease-out infinite;
+    }
+    @keyframes pulseRing {
+      0%   { opacity: 0.6; transform: scale(0.95); }
+      100% { opacity: 0; transform: scale(1.18); }
+    }
+
+    @media (max-width: 480px) {
+      .profile-card { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Background stars -->
+<div id="particles"></div>
+
+<!-- Badge tooltip -->
+<div class="badge-tooltip" id="badgeTooltip">
+  <img id="ttImg" src="" alt="" class="badge-tooltip-img" />
+  <span class="badge-tooltip-name" id="ttName"></span>
+</div>
+
+<!-- Card (populated by JS) -->
+<div class="profile-card" id="card">
+  <!-- loading skeleton -->
+  <div class="banner"><div class="skeleton" style="width:100%;height:150px;border-radius:0;"></div></div>
+  <div style="padding:0 20px;margin-top:-52px;display:flex;align-items:flex-end;gap:14px;">
+    <div class="skeleton" style="width:100px;height:100px;border-radius:50%;flex-shrink:0;border:4px solid var(--card);"></div>
+    <div class="skeleton" style="flex:1;height:54px;border-radius:14px;margin-bottom:10px;"></div>
+  </div>
+  <div style="padding:18px 20px 24px;">
+    <div class="skeleton" style="width:60%;height:30px;margin-bottom:10px;"></div>
+    <div class="skeleton" style="width:40%;height:16px;margin-bottom:20px;"></div>
+    <div style="display:flex;gap:8px;margin-bottom:20px;">
+      <div class="skeleton" style="width:36px;height:36px;border-radius:10px;"></div>
+      <div class="skeleton" style="width:36px;height:36px;border-radius:10px;"></div>
+      <div class="skeleton" style="width:36px;height:36px;border-radius:10px;"></div>
+    </div>
+    <div class="skeleton" style="height:44px;border-radius:50px;margin-bottom:10px;"></div>
+    <div class="skeleton" style="height:44px;border-radius:50px;margin-bottom:10px;"></div>
+  </div>
+</div>
+
+<script>
+/* ── STARS ── */
+(function(){
+  const c = document.getElementById('particles');
+  for(let i=0;i<120;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    s.style.cssText=`
+      left:${Math.random()*100}%;
+      top:${Math.random()*100}%;
+      --dur:${2+Math.random()*4}s;
+      --delay:${Math.random()*5}s;
+      --bright:${0.3+Math.random()*0.7};
+      width:${Math.random()<0.3?3:2}px;
+      height:${Math.random()<0.3?3:2}px;
+    `;
+    c.appendChild(s);
+  }
+})();
+
+/* ── STATUS DOT TYPE ── */
+const statusDotColor = {
+  dnd: '#ed4245', idle: '#faa61a', online: '#3ba55d', offline: '#747f8d'
+};
+
+/* ── RENDER CARD ── */
+function renderCard(p) {
+  const card = document.getElementById('card');
+  const statusType = (p.status?.type || 'dnd').toLowerCase();
+
+  card.innerHTML = `
+    <!-- Banner -->
+    <div class="banner">
+      <img src="${p.banner}" alt="Banner" onerror="this.style.display='none'" />
+      <div class="banner-shimmer"></div>
+    </div>
+
+    <!-- Avatar row -->
+    <div class="avatar-row">
+      <div class="avatar-wrap">
+        <div class="avatar">
+          <img src="${p.avatar}" alt="Avatar" onerror="this.style.display='none'" />
+        </div>
+        <div class="status-dot">
+          <div class="status-dot-inner ${statusType}"></div>
+        </div>
+      </div>
+      <div class="status-bubble">${p.status?.text || ''}</div>
+    </div>
+
+    <!-- Body -->
+    <div class="profile-body">
+      <div class="display-name">${p.name}</div>
+      <div class="meta-row">
+        <span>${p.username}</span>
+        <span class="meta-sep">•</span>
+        <span>${p.nickname}</span>
+      </div>
+
+      <!-- Badges -->
+      ${p.badges?.length ? `
+      <div class="badges-wrap" id="badgesWrap">
+        ${p.badges.map((b,i) => `
+          <div class="badge-item"
+               style="--delay:${i*0.06}s; animation: fadeUp 0.4s ${0.55+i*0.06}s both;"
+               onclick="showTooltip(this, '${escQ(b.name)}', '${escQ(b.image)}', '${escQ(b.color||'#7c6ef7')}')"
+               data-name="${escQ(b.name)}"
+               data-img="${escQ(b.image)}"
+               data-color="${escQ(b.color||'#7c6ef7')}">
+            <img src="${b.image}" alt="${escQ(b.name)}"
+                 onerror="this.style.opacity='0.3'" />
+          </div>
+        `).join('')}
+      </div>` : ''}
+
+      <!-- About -->
+      <div class="about-box">
+        <div class="about-label">About Me</div>
+        <div class="about-text">${escHTML(p.about || '')}</div>
+      </div>
+
+      <!-- Buttons -->
+      ${p.buttons?.length ? `
+      <div class="buttons-wrap">
+        ${p.buttons.map((b,i) => `
+          <a href="${b.link}" target="_blank" rel="noopener"
+             class="profile-btn"
+             style="background: linear-gradient(135deg, ${b.gradient?.[0]||'#7c6ef7'}, ${b.gradient?.[1]||'#5865f2'});
+                    box-shadow: 0 6px 20px ${b.glow||'rgba(124,110,247,0.3)'};
+                    animation: fadeUp 0.4s ${0.6+i*0.07}s both;">
+            <i class="${b.icon || 'fas fa-link'}"></i>
+            ${escHTML(b.name)}
+          </a>
+        `).join('')}
+      </div>` : ''}
+
+    </div><!-- /profile-body -->
+
+    <!-- Footer -->
+    ${p.footer ? `<div class="profile-footer">${escHTML(p.footer)}</div>` : ''}
+  `;
+}
+
+/* ── BADGE TOOLTIP ── */
+let tooltipTimer = null;
+function showTooltip(el, name, img, color) {
+  const tt  = document.getElementById('badgeTooltip');
+  const ttI = document.getElementById('ttImg');
+  const ttN = document.getElementById('ttName');
+  ttI.src   = img;
+  ttN.textContent = name;
+  tt.style.borderColor = color + '55';
+  tt.classList.add('show');
+  clearTimeout(tooltipTimer);
+  tooltipTimer = setTimeout(() => tt.classList.remove('show'), 3000);
+}
+
+/* ── UTILS ── */
+function escQ(s){ return String(s||'').replace(/'/g,"&#39;").replace(/"/g,"&quot;"); }
+function escHTML(s){ return String(s||'').replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+/* ── FETCH JSON ── */
+fetch('./data.json')
+  .then(r => { if(!r.ok) throw new Error(r.status); return r.json(); })
+  .then(d => renderCard(d.profile))
+  .catch(e => {
+    console.error('Could not load data.json', e);
+    // Fallback: render with placeholder data so page still shows
+    renderCard({
+      name: "Profile",
+      username: "username",
+      nickname: "Nickname",
+      avatar: "",
+      banner: "",
+      status: { text: "Status text here", type: "online" },
+      badges: [],
+      buttons: [],
+      about: "data.json not found — check your deployment.",
+      footer: ""
+    });
+  });
+</script>
+</body>
+</html>
